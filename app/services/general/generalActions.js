@@ -14,6 +14,12 @@ export const CREATE_INVOICES = 'CREATE_INVOICES';
 export const CREATE_INVOICES_SUCCESS = 'CREATE_INVOICES_SUCCESS';
 export const CREATE_INVOICES_FAILED = 'CREATE_INVOICES_FAILED';
 
+export const SET_LIST_FILTER = 'SET_LIST_FILTER';
+export const setListFilter = payload => ({
+  type: SET_LIST_FILTER,
+  payload,
+});
+
 export const SET_INPUT_DATA = 'SET_INPUT_DATA';
 export const setInputData = payload => ({
   type: SET_INPUT_DATA,
@@ -29,8 +35,9 @@ export const createInvoicesSuccess = payload => ({
   payload,
 });
 
-export const createInvoicesFailed = () => ({
+export const createInvoicesFailed = payload => ({
   type: CREATE_INVOICES_FAILED,
+  payload,
 });
 
 export const fetchInvoiceList = () => ({

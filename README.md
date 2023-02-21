@@ -1,4 +1,4 @@
-# Pomelo test
+# test project
 
 ### Install
 
@@ -9,7 +9,7 @@ yarn install
 ### Running
 
 ```
-yarn installPod && yarn ios              // Running iOS
+yarn pod && yarn ios              // Running iOS
 yarn android           // Running Android
 ```
 

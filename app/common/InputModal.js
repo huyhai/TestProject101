@@ -10,10 +10,23 @@ const InputModal = ({isVisible, onRequestClose, pressAdd}) => {
   const dispatch = useDispatch();
   const [date, setDate] = useState(new Date());
   const [open, setOpen] = useState(false);
-
+  const [amountText, setAmountText] = useState('');
+  const isNumeric = str => {
+    if (typeof str !== 'string') {
+      return false;
+    }
+    return !isNaN(str) && !isNaN(parseFloat(str));
+  };
   const onAmount = amount => {
     // only number otherwise api will return error
-    dispatch(setInputData({amount: amount?.replace(/[^0-9]/g, '')}));
+    const isValidNumber = isNumeric(amount);
+    if (amount === '') {
+      dispatch(setInputData({amount: amount}));
+      setAmountText(amount);
+    } else if (isValidNumber) {
+      dispatch(setInputData({amount: amount}));
+      setAmountText(amount);
+    }
   };
   const onReference = reference => {
     dispatch(setInputData({reference}));
@@ -58,6 +71,7 @@ const InputModal = ({isVisible, onRequestClose, pressAdd}) => {
           onChangeText={onAmount}
           placeholder="Amount"
           keyboardType="numeric"
+          value={amountText}
         />
         <Button title="ADD INVOICES" onPress={pressAdd} />
         <DatePicker
@@ -96,6 +110,7 @@ const styles = StyleSheet.create({
     margin: 12,
     borderWidth: 1,
     padding: 10,
+    color: 'black',
   },
   modal: {
     margin: 0,

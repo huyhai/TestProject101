@@ -1,24 +1,24 @@
-import * as Actions from './generalActions'
+import * as Actions from './generalActions';
 
 describe('EventActions', () => {
-  describe('Menus Top', () => {
-    it('returns the expected object for fetchFakeData', () => {
-      expect(Actions.fetchFakeData()).toEqual({
-        type: 'FETCH_FAKE_DATA'
-      })
+  describe('fetchAccessToken', () => {
+    it('returns the expected object for fetchAccessToken', () => {
+      expect(Actions.fetchAccessToken()).toEqual({
+        type: 'FETCH_ACCESS_TOKEN',
+      });
     });
 
-    it('returns the expected object for fetchFakeDataSuccess', () => {
-      expect(Actions.fetchFakeDataSuccess(['test', 'array'])).toEqual({
-        type: 'FETCH_FAKE_DATA_SUCCESS',
-        payload: ['test', 'array']
-      })
+    it('returns the expected object for fetchAccessTokenSuccess', () => {
+      expect(Actions.fetchAccessTokenSuccess(['test', 'array'])).toEqual({
+        type: 'FETCH_ACCESS_TOKEN_SUCCESS',
+        payload: ['test', 'array'],
+      });
     });
 
-    it('returns the expected object for fetchFakeDataFailed', () => {
-      expect(Actions.fetchFakeDataFailed()).toEqual({
-        type: 'FETCH_FAKE_DATA_FAILED'
-      })
-    })
+    it('returns the expected object for fetchAccessTokenFailed', () => {
+      expect(Actions.fetchAccessTokenFailed()).toEqual({
+        type: 'FETCH_ACCESS_TOKEN_FAILED',
+      });
+    });
   });
 });

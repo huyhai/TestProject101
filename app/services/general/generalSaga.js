@@ -41,12 +41,26 @@ export default api => {
         break;
       }
       case actions.FETCH_INVOICE_LIST: {
-        const response = yield call(api.getInvoicesList);
+        const {
+          invoicesParams: {page, pageSize, sort, filter, keyword},
+        } = yield select(state => state.general);
+        const response = yield call(
+          api.getInvoicesList,
+          page,
+          pageSize,
+          sort,
+          filter,
+          keyword,
+        );
         if (response) {
           yield put(actions.fetchInvoiceListSuccess(response?.data));
         } else {
           yield put(actions.fetchInvoiceListFailed());
         }
+        break;
+      }
+      case actions.SET_LIST_FILTER: {
+        yield put(actions.fetchInvoiceList());
         break;
       }
       case actions.CREATE_INVOICES: {
@@ -145,10 +159,17 @@ export default api => {
           ],
         };
         const response = yield call(api.createInvoices, JSON.stringify(params));
-        if (response) {
-          yield put(actions.fetchInvoiceList());
+        if (response?.errorCode) {
+          yield put(actions.createInvoicesFailed(response.message));
         } else {
-          yield put(actions.createInvoicesFailed());
+          //reset and reload
+          yield put(
+            actions.setListFilter({
+              sort: 'DESCENDING',
+              filter: 'CREATED_DATE',
+              keyword: '',
+            }),
+          );
         }
         break;
       }
@@ -162,6 +183,7 @@ export default api => {
         actions.FETCH_USER_PROFILE,
         actions.FETCH_INVOICE_LIST,
         actions.CREATE_INVOICES,
+        actions.SET_LIST_FILTER,
       ],
       worker,
     );

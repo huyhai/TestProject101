@@ -1,46 +1,46 @@
-import * as reducer from './generalReducer'
+import * as reducer from './generalReducer';
 
 const resetToDefaultState = () => ({
-    listTransactions: [],
-    fetchingData: false
+  listInvoices: [],
+  fetchingData: false,
 });
 
 const defaultState = resetToDefaultState();
 
 describe('generalReducer', () => {
-  describe('fetchFakeData', () => {
+  describe('fetchAccessToken', () => {
     beforeEach(() => {
-      resetToDefaultState()
+      resetToDefaultState();
     });
 
-    it('returns expected state for fetchFakeData', () => {
+    it('returns expected state for fetchAccessToken', () => {
       const expected = {
         ...defaultState,
-          fetchingData: true
+        fetchingData: true,
       };
-      const state = reducer.fetchFakeData(defaultState);
-      expect(state).toEqual(expected)
+      const state = reducer.fetchAccessToken(defaultState);
+      expect(state).toEqual(expected);
     });
 
-    it('returns expected state for fetchFakeDataSuccess', () => {
-      const action = {
-        payload: ['test', 'array']
-      };
-      const expected = {
-        ...defaultState,
-          listTransactions: action.payload
-      };
-      const state = reducer.fetchFakeDataSuccess(defaultState, action);
-      expect(state).toEqual(expected)
-    });
+    // it('returns expected state for fetchAccessTokenSuccess', () => {
+    //   const action = {
+    //     payload: ['test', 'array'],
+    //   };
+    //   const expected = {
+    //     ...defaultState,
+    //     listInvoices: action.payload,
+    //   };
+    //   const state = reducer.fetchAccessTokenSuccess(defaultState, action);
+    //   expect(state).toEqual(expected);
+    // });
 
-    it('returns expected state for fetchFakeDataFailure', () => {
+    it('returns expected state for fetchAccessTokenFailure', () => {
       const expected = {
         ...defaultState,
-          fetchingData: false
+        fetchingData: false,
       };
-      const state = reducer.fetchFakeDataFailure(defaultState);
-      expect(state).toEqual(expected)
-    })
+      const state = reducer.fetchAccessTokenFailure(defaultState);
+      expect(state).toEqual(expected);
+    });
   });
 });

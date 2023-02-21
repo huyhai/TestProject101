@@ -6,5 +6,6 @@ const styles = StyleSheet.create({
   },
   flexDirectionRow: {flexDirection: 'row'},
   buttonView: {flexDirection: 'row', justifyContent: 'center'},
+  errorText: {color: 'red'},
 });
 export default styles;

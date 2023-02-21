@@ -14,16 +14,24 @@ import {
   fetchAccessToken,
   createInvoices,
   setInputData,
+  fetchInvoiceList,
+  setListFilter,
 } from '../../services/general/generalActions';
 import commonStyles from '../../common/style';
 import styles from './style';
 import InputModal from '../../common/InputModal';
+import SortModal from '../../common/SortModal';
+import FilterModal from '../../common/FilterModal';
+import SearchModal from '../../common/SearchModal';
 
 export class Home extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       showModal: false,
+      showModalSort: false,
+      showModalFilter: false,
+      showModalSearch: false,
     };
   }
   static propTypes = {
@@ -37,20 +45,30 @@ export class Home extends React.Component {
 
   componentDidMount() {
     const {fetchAccessToken} = this.props;
-    // fetchAccessToken();
+    fetchAccessToken();
   }
 
   render() {
-    const {listInvoices, fetchingData, inputData} = this.props;
-    const {showModal} = this.state;
-    console.log('inputData', inputData);
+    const {
+      listInvoices,
+      invoicesParams: {canLoadMore},
+      errorMessage,
+    } = this.props;
+    const {showModal, showModalSort, showModalFilter, showModalSearch} =
+      this.state;
     return (
       <SafeAreaView style={commonStyles.flex1}>
         <View style={commonStyles.buttonView}>
-          <Button title="Search" onPress={this.clickUpdate} />
-          <Button title="Sort" onPress={this.clickUpdate} />
-          <Button title="Filter" onPress={this.clickUpdate} />
+          <Button title="Search" onPress={this.showSearchModal} />
+          <Button title="Sort" onPress={this.showSortModal} />
+          <Button title="Filter" onPress={this.showFilterModal} />
+          <Button title="RESET" onPress={this.resetParams} />
         </View>
+        {errorMessage !== '' ? (
+          <Text style={commonStyles.errorText}>{errorMessage}</Text>
+        ) : (
+          ''
+        )}
 
         <FlatList
           style={commonStyles.flex1}
@@ -59,19 +77,54 @@ export class Home extends React.Component {
           keyExtractor={this.keyExtractor}
           removeClippedSubviews={true}
           ItemSeparatorComponent={this.renderSeparator}
+          onEndReached={this.onEndReached}
+          onEndReachedThreshold={0.5}
+          ListFooterComponent={
+            canLoadMore ? (
+              <ActivityIndicator size="large" color={'red'} />
+            ) : null
+          }
         />
         <InputModal isVisible={showModal} pressAdd={this.pressAdd} />
+        <SortModal
+          isVisible={showModalSort}
+          onRequestClose={this.hideSortModal}
+        />
+        <FilterModal
+          isVisible={showModalFilter}
+          onRequestClose={this.hideFilterModal}
+        />
+        <SearchModal
+          isVisible={showModalSearch}
+          onRequestClose={this.hideSearchModal}
+        />
         <Button title="Create Invoice" onPress={this.clickUpdate} />
-        {fetchingData && (
-          <View style={styles.loading}>
-            <ActivityIndicator size="large" />
-          </View>
-        )}
       </SafeAreaView>
     );
   }
+  resetParams = () => {
+    const {setListFilter} = this.props;
+    setListFilter({sort: 'DESCENDING', filter: 'CREATED_DATE', keyword: ''});
+  };
+  onEndReached = () => {
+    const {
+      fetchInvoiceList,
+      invoicesParams: {canLoadMore},
+    } = this.props;
+    if (canLoadMore) {
+      fetchInvoiceList();
+    }
+  };
 
-  keyExtractor = item => item.invoiceId;
+  showSearchModal = () => this.setState({showModalSearch: true});
+  hideSearchModal = () => this.setState({showModalSearch: false});
+
+  showSortModal = () => this.setState({showModalSort: true});
+  hideSortModal = () => this.setState({showModalSort: false});
+
+  showFilterModal = () => this.setState({showModalFilter: true});
+  hideFilterModal = () => this.setState({showModalFilter: false});
+
   pressAdd = () => {
     const {createInvoices} = this.props;
     createInvoices();
@@ -95,9 +148,8 @@ export class Home extends React.Component {
     );
   };
 
-  renderSeparator = () => {
-    return <View style={styles.separatorLine} />;
-  };
+  renderSeparator = () => <View style={styles.separatorLine} />;
+  keyExtractor = item => item.invoiceId;
 }
 
 export const mapStateToProps = state => {
@@ -106,6 +158,8 @@ export const mapStateToProps = state => {
     listInvoices: general.listInvoices,
     fetchingData: general.fetchingData,
     inputData: general.inputData,
+    invoicesParams: general.invoicesParams,
+    errorMessage: general.errorMessage,
   };
 };
 
@@ -115,6 +169,8 @@ export const mapDispatchToProps = dispatch =>
       fetchAccessToken,
       createInvoices,
       setInputData,
+      fetchInvoiceList,
+      setListFilter,
     },
     dispatch,
   );

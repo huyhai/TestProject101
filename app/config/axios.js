@@ -1,4 +1,3 @@
-/* istanbul ignore file */
 import axios from 'axios';
 
 const timeout = 30000;
@@ -7,7 +6,6 @@ const instance = axios.create({
   baseURL: 'https://sandbox.101digital.io',
 });
 
-// instance.defaults.headers.common['device-token'] = deviceUniqueID
 instance.defaults.headers.common['Content-Type'] =
   'application/x-www-form-urlencoded';
 instance.defaults.headers.common.Cookie =
@@ -21,39 +19,23 @@ instance.interceptors.response.use(
     return response?.data;
   },
   error => {
-    // hide timeout error
     if (__DEV__) {
       console.log(error);
     }
-    if (error.message && error.message.indexOf(`${timeout}ms`) !== -1) {
-      return {
-        status: error.status || -1,
-        message: error.message,
-      };
-    }
-    // check if request is from vouches
-    if (error.response && error.response.request) {
-      return {
-        status: error.status || -1,
-        message: error.message,
-      };
-    }
-
     // unexpected/default
 
     return {
-      status: error.status || -1,
-      message: 'errorMessage',
-      errorCode: -1,
+      status: error.response.status || -1,
+      message: error.response.data.errors[0].message,
+      errorCode: error.response.data.errors[0].code,
     };
   },
 );
 
 instance.interceptors.request.use(config => {
-  // console.log('request', config)
   if (!config.params) {
     config.params = {...config.params};
-    // config.params['locale'] = QUERY_LANGUAGE_DEFAULT
+    // custom params here ...
   }
   return config;
 });
