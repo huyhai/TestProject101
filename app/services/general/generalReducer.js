@@ -56,6 +56,7 @@ export const setInputSuccess = (state, action) => ({
   ...state,
   inputData: {...state.inputData, ...action.payload},
 });
+//set condition of filter, sort or search
 export const setListFilter = (state, action) => ({
   ...state,
   listInvoices: [],

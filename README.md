@@ -22,6 +22,7 @@ yarn test
 ### Documentation folder structure
 
 Here is the documentation of the current application folder structure
+This project using react native version 0.70 and side effects management with Redux-Saga
 ```
     .
     ├── ...

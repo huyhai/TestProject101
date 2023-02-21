@@ -64,12 +64,12 @@ export class Home extends React.Component {
           <Button title="Filter" onPress={this.showFilterModal} />
           <Button title="RESET" onPress={this.resetParams} />
         </View>
+        {/* show error when submit invoices. */}
         {errorMessage !== '' ? (
           <Text style={commonStyles.errorText}>{errorMessage}</Text>
         ) : (
           ''
         )}
-
         <FlatList
           style={commonStyles.flex1}
           data={listInvoices}
